@@ -84,10 +84,10 @@ export default function Table() {
                     <RangePicker
                         className="mb-2 w-28 md:w-52"
                         onChange={(values) => {
-                            const v1 = moment(values[0]).format('DD-MM-YYYY');
-                            const v2 = moment(values[1]).format('DD-MM-YYYY');
-                            setToDate(v2);
-                            setFromDate(v1);
+                            const v1 = values[0].format('YYYY-MM-DD') ;
+                            const v2 = values[1].format('YYYY-MM-DD') ;
+                            setFromDate(v1) ;
+                            setToDate(v2) ;
                         }}
                         size='small'
                     />
