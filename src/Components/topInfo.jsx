@@ -13,6 +13,17 @@ const TopInfo = () => {
       })
   }, []);
 
+  const [tableStats, setTableStats] = useState({
+    install: 0,
+    uninstall: 0,
+    churn: 0
+  }) ;
+
+  const propFunc = (obj) => {
+    setTableStats(obj) ;
+    console.log(tableStats);
+  }
+
   return (
     <div className='w-[100vw] h-full'>
       <div className='flex flex-wrap justify-around rounded-md bg-gray-800 h-fit m-4 p-4'>
@@ -20,7 +31,7 @@ const TopInfo = () => {
           <div className='flex space-x-3'>
           <i className="fa-solid fa-download h-6 md:h-12 w-6 md:w-12 md:text-2xl flex justify-center bg-white rounded-full items-center"></i>
             <div className='text-white'>
-              <h2 className='text-sm md:text-lg font-bold'>{stats && stats.data.totalInstall}</h2>
+              <h2 className='text-sm md:text-lg font-bold'>{tableStats.install}</h2>
               <p className='text-[8px] md:text-sm'>App Installed</p>
             </div>
           </div>
@@ -28,7 +39,7 @@ const TopInfo = () => {
           <div className='flex space-x-3'>
           <i className="fa-solid fa-square-xmark h-6 md:h-12 w-6 md:w-12 md:text-2xl flex justify-center bg-white rounded-full items-center"></i>
             <div className='text-white'>
-              <h2 className='text-sm md:text-lg font-bold'>{stats && stats.data.totaluninstall}</h2>
+              <h2 className='text-sm md:text-lg font-bold'>{tableStats.uninstall}</h2>
               <p className='text-[8px] md:text-xs'>App Un-Installed</p>
             </div>
           </div>
@@ -56,7 +67,7 @@ const TopInfo = () => {
           <div className='flex space-x-3'>
             <div className='w-6 md:w-12 h-6 md:h-12 rounded-full bg-white'></div>
             <div className='text-white'>
-              <h2 className='text-sm md:text-lg font-bold'>{stats && stats.data.churn}</h2>
+              <h2 className='text-sm md:text-lg font-bold'>{(tableStats.churn).toFixed(2)}</h2>
               <p className='text-[8px] md:text-xs'>Churn Rate</p>
             </div>
           </div>
@@ -70,7 +81,9 @@ const TopInfo = () => {
           </div>
         </section>
       </div>
-      <Table />
+      <Table 
+        func= {propFunc}
+      />
     </div>
   )
 }

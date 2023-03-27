@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DatePicker } from 'antd';
 import ReactPaginate from 'react-paginate';
 
 
-export default function Table() {
+export default function Table(prop) {
 
     const [isList, setIsList] = useState(false);
     const [info, setInfo] = useState();
@@ -12,18 +12,38 @@ export default function Table() {
     const [fromDate, setFromDate] = useState('2022-04-01');
     const [toDate, setToDate] = useState('2022-08-24');
     const [tPage, setTPage] = useState(12);
+    let topData = useRef({
+        install: 0,
+        uninstall: 0,
+        churn: 0
+    });
 
     const handlePageChange = (event) => {
         setPage(event.selected + 1)
     }
 
     useEffect(() => {
+
         fetch(`https://admindevapi.wowtalent.live/api/admin/dashboard/installstatasticlist?fromdate=${fromDate}&todate=${toDate}&page=${page}&limit=${entries}`).then((response) =>
             response.json()).then((data) => {
                 setInfo(data);
                 setTPage(data.data.pages);
             })
-    }, [page, entries, toDate, fromDate])
+    }, [entries, page, toDate, fromDate])
+
+    useEffect(() => {
+        topData.current = {
+            install: 0,
+            uninstall: 0,
+            churn: 0
+        }
+        info && info.data.data.map((res) => {
+            topData.current.install = topData.current.install + res.totalinstall;
+            topData.current.uninstall = topData.current.uninstall + res.totaluninstall;
+            topData.current.churn = topData.current.churn + res.totalchurn;
+        })
+        prop.func(topData.current)
+    }, [info])
 
     return (
         <>
@@ -134,7 +154,7 @@ export default function Table() {
                                     </td>
                                     <td class="p-4 w-1/4">{res.totaluninstall}</td>
                                     <td class="p-4 w-1/4">
-                                    <div className="">
+                                        <div className="">
                                             <div className="flex items-center space-x-0.5">
                                                 <i className="fa-brands fa-android"></i>
                                                 <p>{res.ios_uninstall}</p>
@@ -147,7 +167,7 @@ export default function Table() {
                                     </td>
                                     <td class="p-4 w-1/4">{res.totalchurn}</td>
                                     <td class="p-4 w-1/4">
-                                    <div className="">
+                                        <div className="">
                                             <div className="flex items-center space-x-0.5">
                                                 <i className="fa-brands fa-android"></i>
                                                 <p>{res.ios_churn}</p>
